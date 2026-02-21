@@ -15,10 +15,13 @@ void main() {
 
     // System.out.println(test.getLatinSequence("LAURIE"));
     // System.out.println(test.getLatinSequence("LAntAR"));
+    System.out.println(test.separateUpperCase("LAntARuuqungwAnquV"));
 
     System.out.println(test.separateUpperCase("LAntARuuqungwAnqu"));
 
     System.out.println(test.parcourirStringToTranslate(test.separateUpperCase("LAntARuuqungwAnqu")));
+
+    test.translateLatinLetter("V");
 
 
 

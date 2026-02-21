@@ -22,9 +22,13 @@ public class Tengwars {
         for(int i = 0; i < alphabeticalTengar.length ; i++){
 
             if(latinLetters.equals(alphabeticalTengar[i].getClassic())){
-
-                translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
+                    translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
             }
+
+            if (translatedLetter.isEmpty()){
+                throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
+            }
+
         }
         return translatedLetter;
     }
