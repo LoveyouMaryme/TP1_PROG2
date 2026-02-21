@@ -16,7 +16,7 @@ void main() {
     // System.out.println(test.getLatinSequence("LAURIE"));
     // System.out.println(test.getLatinSequence("LAntAR"));
 
-    System.out.println(test.separateUpperCase("LAntAR"));
+    System.out.println(test.separateUpperCase("LAntARuuqu"));
 
 
 

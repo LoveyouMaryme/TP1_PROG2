@@ -100,19 +100,28 @@ public class Tengwars {
 
             if (isCapitalizedLetter(letter)) {
             separatedUpperCase.addFirst(String.valueOf(letter));
-            } else if( letter == 'u' || letter == 'w'){
+            } else if( (letter == 'u' || letter == 'w')) {
 
-                String lowerCase = "" + array_sentence[i-2] + array_sentence[i-1] + letter;
-                separatedUpperCase.addFirst(lowerCase);
+                if (array_sentence[i - 2] == 'n') {
 
-                i--;
-                i--;
-            } else {
+                    String lowerCase = "" + array_sentence[i - 2] + array_sentence[i - 1] + letter;
+                    separatedUpperCase.addFirst(lowerCase);
+
+                    i -= 2;
+
+                } else {
+                    String lowerCase = "" + array_sentence[i - 1] + letter;
+                    separatedUpperCase.addFirst(lowerCase);
+                    i--;
+
+                }
+
+            }
+            else {
                 String lowerCase = ""   + array_sentence[i-1] + letter ;
                 separatedUpperCase.addFirst(lowerCase);
-                i--;
+                i -= 1;
             }
-
         }
 
 //
