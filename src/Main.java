@@ -17,9 +17,11 @@ void main() {
     // System.out.println(test.getLatinSequence("LAntAR"));
     System.out.println(test.separateUpperCase("LAntARuuqungwAnquV"));
 
-    System.out.println(test.separateUpperCase("LAntARuuqungwAnqu"));
+    //System.out.println(test.separateUpperCase("LAntARuuqungwAnqu"));
+    System.out.println(Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN"));
+    //System.out.println(Tengwars.quenyaVersTengwarLaTeX("AndUNE PELLA"));
 
-    System.out.println(test.parcourirStringToTranslate(test.separateUpperCase("LAntARuuqungwAnqu")));
+    //System.out.println(test.parcourirStringToTranslate(test.separateUpperCase("AndUNE")));
 
     test.translateLatinLetter("V");
 
