@@ -20,7 +20,8 @@ void main() {
     //System.out.println(test.separateUpperCase("LAntARuuqungwAnqu"));
     //System.out.println(Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN"));
 
-    String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN");
+    //String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN");
+    String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("AndUNE PELLA");
     Scanner scanner = new Scanner(phraseTengwar);
 
     while (scanner.hasNext()){
