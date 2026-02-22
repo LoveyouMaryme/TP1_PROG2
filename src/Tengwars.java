@@ -6,7 +6,28 @@ public class Tengwars {
 
 
     public static String quenyaVersTengwarLaTeX( String entrees ) {
-        return "";
+
+        Tengwars translation = new Tengwars(entrees);
+
+        String[] mots = translation.breakdownSentences(entrees);
+
+        StringBuilder motsTraduits = new StringBuilder();
+
+        for (int i = 0; i < mots.length; i++) {
+            //prend le mot courant et le transforme en array de caractères légaux
+            ArrayList<String> lettresSeparees = translation.separateUpperCase(mots[i]);
+            //traduit le caractère courant en tengwar
+            ArrayList<String> lettresTraduites = translation.parcourirStringToTranslate(lettresSeparees);
+
+            //on ajoute chaque lettre traduite dans la phrase traduite
+            for (int j = 0; j < lettresTraduites.size(); j++) {
+                motsTraduits.append(lettresTraduites.get(j));
+            }
+            if (i < mots.length - 1){
+                motsTraduits.append(" ");
+            }
+        }
+        return motsTraduits.toString();
     }
 
     public Tengwars(){
@@ -23,12 +44,12 @@ public class Tengwars {
             if(latinLetters.equals(alphabeticalTengar[i].getClassic())){
                     translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
             }
-
-            if (translatedLetter.isEmpty()){
-                throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
-            }
-
         }
+
+        if (translatedLetter.isEmpty()){
+            throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
+        }
+
         return translatedLetter;
     }
 
