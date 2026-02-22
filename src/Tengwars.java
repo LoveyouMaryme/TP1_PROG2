@@ -45,12 +45,12 @@ public class Tengwars {
             if(latinLetters.equals(alphabeticalTengar[i].getClassic())){
                     translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
             }
-
-            if (translatedLetter.isEmpty()){
-                throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
-            }
-
         }
+
+        if (translatedLetter.isEmpty()){
+            throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
+        }
+
         return translatedLetter;
     }
 
