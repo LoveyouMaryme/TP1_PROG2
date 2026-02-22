@@ -19,6 +19,9 @@ public class Tengwars {
             //traduit le caractère courant en tengwar
             ArrayList<String> lettresTraduites = translation.parcourirStringToTranslate(lettresSeparees);
 
+            //Si le mot contient des voyelles, on ajoute \Telco ou \Ara au début du mot traduit selon le cas
+             motsTraduits.append(translation.checkvowels(lettresSeparees));
+
             //on ajoute chaque lettre traduite dans la phrase traduite
             for (int j = 0; j < lettresTraduites.size(); j++) {
                 motsTraduits.append(lettresTraduites.get(j));
@@ -132,6 +135,47 @@ public class Tengwars {
         }
 
         return separatedUpperCase;
+    }
+
+    //TELCO
+    public boolean startsWithShortVowel(ArrayList<String> mots){
+
+        boolean startswithVowel = false;
+
+        if (!mots.isEmpty()){
+            switch (mots.getFirst()){
+                case "A", "E", "I", "O", "U" ->{
+                    startswithVowel = true;
+                }
+            }
+        }
+
+        return startswithVowel;
+    }
+
+    public boolean startsWithLongVowel(ArrayList<String> mots){
+        boolean startsWithLongVowel = false;
+
+        if (!mots.isEmpty()){
+            switch (mots.getFirst()){
+                case "ee", "ii", "oo", "uu" ->{
+                    startsWithLongVowel = true;
+                }
+            }
+        }
+        return startsWithLongVowel;
+    }
+
+    public String checkvowels(ArrayList<String> lettresSeparees){
+
+        String vowelToAdd = "";
+
+        if (startsWithShortVowel(lettresSeparees)){
+            vowelToAdd = TengwarScript.TELCO.getCommandeLaTeX();
+        } else if (startsWithLongVowel(lettresSeparees)) {
+            vowelToAdd = TengwarScript.ARA.getCommandeLaTeX();
+        }
+        return vowelToAdd;
     }
 
 }
