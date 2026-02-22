@@ -4,13 +4,12 @@ import java.util.Scanner;
 
 public class Tengwars {
 
-    String phrase;
+
     public static String quenyaVersTengwarLaTeX( String entrees ) {
         return "";
     }
 
-    public Tengwars(String phrase){
-        this.phrase = phrase;
+    public Tengwars(){
     }
 
 

@@ -2,7 +2,7 @@
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 void main() {
 
-    Tengwars test = new Tengwars("LAURIE LAntAR LASSI SURINEN");
+    Tengwars test = new Tengwars();
 
 
     TengwarScript T =  TengwarScript.TINCO;
