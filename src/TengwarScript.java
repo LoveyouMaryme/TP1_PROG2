@@ -129,4 +129,25 @@ public enum TengwarScript {
     public boolean estVoyelleLongue() {
         return equals( AMATIXE_2 ) || equals( TECO_DOUBLE ) || equals( REMPE_DOUBLE ) || equals( REMPENUQUERNA_DOUBLE );
     }
+
+    public static String traduitLettresLatines(String latinLetters){
+
+        TengwarScript [] alphabeticalTengar =  TengwarScript.values();
+        String translatedLetter = "";
+
+        for(int i = 0; i < alphabeticalTengar.length ; i++){
+
+            if(latinLetters.equals(alphabeticalTengar[i].getClassic())){
+                translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
+            }
+        }
+
+        if (translatedLetter.isEmpty()){
+            throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
+        }
+
+        return translatedLetter;
+    }
+
+
 }

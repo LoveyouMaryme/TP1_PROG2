@@ -1,26 +1,44 @@
-import java.lang.classfile.ClassTransform;
 import java.util.ArrayList;
-import java.util.Scanner;
+
+/**
+ *
+ * Permet de traduire un texte écrit en Quenya (lettres latines)
+ * en commande LaTeX représentent des caractères Tengwar.
+ *
+ * Cette classe, en partenariat avec {@link TengwarScript}, permet de gérer les sous-groupes
+ * de lettres latines afin de trouver leur bon correspondant en commande LaTeX.
+ *
+ */
 
 public class Tengwars {
 
 
+    public Tengwars(){}
+
+    /**
+     * Traduit les phrases écrites en Quenya (lettres latines) en phrase Tengwar avec des commandes LaTeX.
+     *
+     *  @param entrees : la phrase écrite en caractères latins à traduire.
+     * @return La phrase traduite en Tengwar avec des commandes LaTeX.
+     *
+     */
+
     public static String quenyaVersTengwarLaTeX( String entrees ) {
 
-        Tengwars translation = new Tengwars(entrees);
+        Tengwars translation = new Tengwars();
 
-        String[] mots = translation.breakdownSentences(entrees);
+        String[] mots = translation.separePhraseEnMots(entrees);
 
         StringBuilder motsTraduits = new StringBuilder();
 
         for (int i = 0; i < mots.length; i++) {
             //prend le mot courant et le transforme en array de caractères légaux
-            ArrayList<String> lettresSeparees = translation.separateUpperCase(mots[i]);
+            ArrayList<String> lettresSeparees = translation.separeMotEnSousGroupe(mots[i]);
             //traduit le caractère courant en tengwar
-            ArrayList<String> lettresTraduites = translation.parcourirStringToTranslate(lettresSeparees);
+            ArrayList<String> lettresTraduites = translation.traduireMotDeQuenyaEnTengwar(lettresSeparees);
 
             //Si le mot contient des voyelles, on ajoute \Telco ou \Ara au début du mot traduit selon le cas
-             motsTraduits.append(translation.checkvowels(lettresSeparees));
+             motsTraduits.append(translation.ajoutPrefixeVoyelle(lettresSeparees));
 
             //on ajoute chaque lettre traduite dans la phrase traduite
             for (int j = 0; j < lettresTraduites.size(); j++) {
@@ -33,148 +51,178 @@ public class Tengwars {
         return motsTraduits.toString();
     }
 
-    public Tengwars(){
-    }
+    /**
+     * Traduit un mot (sous forme de liste de sous-groupes de lettres) en Tengwar
+     * avec commandes LaTeX.
+     *
+     * @param mot Liste de sous-groupes de lettres à traduire.
+     * @return Liste des sous-groupes traduits en commandes LaTeX.
+     */
 
+    public ArrayList<String> traduireMotDeQuenyaEnTengwar(ArrayList<String> mot){
 
-    public static String translateLatinLetter(String latinLetters){
+        ArrayList<String> motTraduit = new ArrayList<>();
 
-        TengwarScript [] alphabeticalTengar =  TengwarScript.values();
-        String translatedLetter = "";
-
-        for(int i = 0; i < alphabeticalTengar.length ; i++){
-
-            if(latinLetters.equals(alphabeticalTengar[i].getClassic())){
-                    translatedLetter = alphabeticalTengar[i].getCommandeLaTeX();
-            }
-        }
-
-        if (translatedLetter.isEmpty()){
-            throw new PasDuQuenyaException("Cette phrase n'existe pas en Quenya.");
-        }
-
-        return translatedLetter;
-    }
-
-
-    public ArrayList<String> parcourirStringToTranslate( ArrayList<String> word){
-
-        ArrayList<String> translatedWord = new ArrayList<>();
-
-
-        for(int i = 0; i < word.size(); i++ ){
-            String translatedLetter = translateLatinLetter( word.get(i));
-            translatedWord.add(translatedLetter);
+        for(int i = 0; i < mot.size(); i++ ){
+            String lettreTraduite = TengwarScript.traduitLettresLatines(mot.get(i));
+            motTraduit.add(lettreTraduite);
 
         }
 
-        return translatedWord;
+        return motTraduit;
 
     }
 
 
-    public boolean isCapitalizedLetter(char letter){
-        boolean isCapitalized = true;
-        int zCharNumber = 90;
+    /**
+     * Vérifie si la lettre est en majuscule ou en minuscule
+     *
+     * @param lettre : Une lettre latine à vérifier.
+     * @return true si la lettre latine est en majuscule, false si elle ne l'est pas.
+     */
+    public boolean estLettreMajuscule(char lettre){
+        boolean estEnMajuscule = true;
 
-        if(letter >=  zCharNumber){
-            isCapitalized = false;
+        if(lettre >= 'Z'){
+            estEnMajuscule = false;
         }
 
-
-        return isCapitalized;
+        return estEnMajuscule;
     }
 
-    public String[] breakdownSentences(String phrase){
+    /**
+     * Sépare une phrase en ses différents mots.
+     *
+     * @param phrase : La phrase écrite en lettre latine en Quenya.
+     * @return Un tableau contenant les différents mots de la phrase.
+     */
+    public String[] separePhraseEnMots(String phrase){
 
-        String[] words = phrase.split(" ");
+        String[] mots = phrase.split(" ");
 
-        return words;
+        return mots;
     }
 
-    public ArrayList<String> separateUpperCase(String word) {
+    /**
+     * Sépare un mot en sous-groupes de lettres afin de préparer la traduction
+     * en commandes LaTeX.
+     *
+     * Règles de séparation :
+     * <ul>
+     *     <li>Majuscule : sous-groupe d'une seule lettre.</li>
+     *     <li>Lettre 'u' ou 'w' précédée de 'n' deux positions avant : sous-groupe
+     *         de 3 lettres (n + ? + u/w).</li>
+     *     <li>Sinon : sous-groupe de 2 lettres.</li>
+     * </ul>
+     *
+     * @param mot Le mot en Quenya (lettres latines).
+     * @return Une liste de sous-groupes de lettres, prête pour la traduction.
+     */
+    public ArrayList<String> separeMotEnSousGroupe(String mot) {
 
-        ArrayList<String> separatedUpperCase = new ArrayList<>();
-        char[] array_sentence = word.toCharArray();
-        int wordLength = array_sentence.length;
+        ArrayList<String> motSepareEnSousGroupe = new ArrayList<>();
+        char[] motEnTableau = mot.toCharArray();
+        int motLongueur = motEnTableau.length;
 
-        for(int i = wordLength - 1; i >= 0; i--){
+        for(int i = motLongueur - 1; i >= 0; i--){
 
-            char letter = array_sentence[i];
+            char lettre = motEnTableau[i];
 
-            // Case 1: Capital letter -> 1-letter cluster
-            if (isCapitalizedLetter(letter)) {
-            separatedUpperCase.addFirst(String.valueOf(letter));
+            // Case 1: Lettre en majuscule -> Sous-groupe de 1 lettre
+            if (this.estLettreMajuscule(lettre)) {
+            motSepareEnSousGroupe.addFirst(String.valueOf(lettre));
 
-            // Case 2: 3-letters cluster ( n + ? + u/w )
-            } else if( (letter == 'u' || letter == 'w')) {
+            // Case 2: Sous-groupe de 3 lettres ( n + ? + u/w )
+            } else if( (lettre == 'u' || lettre == 'w')) {
 
-                if (array_sentence[i - 2] == 'n') {
+                if (motEnTableau[i - 2] == 'n') {
 
-                    String lowerCase = "" + array_sentence[i - 2] + array_sentence[i - 1] + letter;
-                    separatedUpperCase.addFirst(lowerCase);
+                    String lowerCase = "" + motEnTableau[i - 2] + motEnTableau[i - 1] + lettre;
+                    motSepareEnSousGroupe.addFirst(lowerCase);
 
                     i -= 2;
 
 
                 // Case 3: 2-letters cluster
                 } else {
-                    String lowerCase = "" + array_sentence[i - 1] + letter;
-                    separatedUpperCase.addFirst(lowerCase);
+                    String lowerCase = "" + motEnTableau[i - 1] + lettre;
+                    motSepareEnSousGroupe.addFirst(lowerCase);
                     i -= 1;
 
                 }
             }
             // Case 3: 2-letters cluster
             else {
-                String lowerCase = ""   + array_sentence[i-1] + letter ;
-                separatedUpperCase.addFirst(lowerCase);
+                String lowerCase = ""   + motEnTableau[i-1] + lettre;
+                motSepareEnSousGroupe.addFirst(lowerCase);
                 i -= 1;
             }
         }
 
-        return separatedUpperCase;
+        return motSepareEnSousGroupe;
     }
 
-    //TELCO
-    public boolean startsWithShortVowel(ArrayList<String> mots){
+    /**
+     * Vérifie si le premier sous-groupe d'un mot commence par une voyelle courte en Quenya.
+     *
+     * @param mot Liste de sous-groupes de lettres formant un mot en Quenya.
+     * @return true si le mot commence par une voyelle courte ("A", "E", "I", "O", "U"), false sinon.
+     */
+    public boolean commenceAvecVoyelleCourte(ArrayList<String> mot){
 
-        boolean startswithVowel = false;
+        boolean commenceAvecVoyelleCourte = false;
 
-        if (!mots.isEmpty()){
-            switch (mots.getFirst()){
+        if (!mot.isEmpty()){
+            switch (mot.getFirst()){
                 case "A", "E", "I", "O", "U" ->{
-                    startswithVowel = true;
+                    commenceAvecVoyelleCourte = true;
                 }
             }
         }
 
-        return startswithVowel;
+        return commenceAvecVoyelleCourte;
     }
 
-    public boolean startsWithLongVowel(ArrayList<String> mots){
-        boolean startsWithLongVowel = false;
 
-        if (!mots.isEmpty()){
-            switch (mots.getFirst()){
+    /**
+     * Vérifie si le premier sous-groupe d'un mot commence par une voyelle longue en Quenya.
+     *
+     * @param mot Liste de sous-groupes de lettres formant un mot en Quenya.
+     * @return true si le mot commence par une voyelle longue ("ee", "ii", "oo", "uu"), false sinon.
+     */
+    public boolean commenceAvecLongueVoyelle(ArrayList<String> mot){
+        boolean commenceAvecLongueVoyelle = false;
+
+        if (!mot.isEmpty()){
+            switch (mot.getFirst()){
                 case "ee", "ii", "oo", "uu" ->{
-                    startsWithLongVowel = true;
+                    commenceAvecLongueVoyelle = true;
                 }
             }
         }
-        return startsWithLongVowel;
+        return commenceAvecLongueVoyelle;
     }
 
-    public String checkvowels(ArrayList<String> lettresSeparees){
+    /**
+     * Ajoute le préfixe Tengwar correspondant à la voyelle initiale d'un mot si applicable.
+     *
+     * Renvoie la commande LaTeX associée à une voyelle courte ou longue
+     * située au début d'un mot Quenya. Si le mot ne commence pas par une voyelle,
+     * la chaîne renvoyée est vide.
+     *
+     * @param lettresSeparees Tableau de sous-groupes de lettres formant un mot en Quenya.
+     * @return La commande LaTeX correspondant à la voyelle initiale, ou chaîne vide si aucune voyelle.
+     */
+    public String ajoutPrefixeVoyelle(ArrayList<String> lettresSeparees){
 
-        String vowelToAdd = "";
+        String voyelleTengarAjoutee = "";
 
-        if (startsWithShortVowel(lettresSeparees)){
-            vowelToAdd = TengwarScript.TELCO.getCommandeLaTeX();
-        } else if (startsWithLongVowel(lettresSeparees)) {
-            vowelToAdd = TengwarScript.ARA.getCommandeLaTeX();
+        if (commenceAvecVoyelleCourte(lettresSeparees)){
+            voyelleTengarAjoutee = TengwarScript.TELCO.getCommandeLaTeX();
+        } else if (commenceAvecLongueVoyelle(lettresSeparees)) {
+            voyelleTengarAjoutee = TengwarScript.ARA.getCommandeLaTeX();
         }
-        return vowelToAdd;
+        return voyelleTengarAjoutee;
     }
 
 }

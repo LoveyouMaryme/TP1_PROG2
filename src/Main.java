@@ -20,15 +20,17 @@ void main() {
     //System.out.println(test.separateUpperCase("LAntARuuqungwAnqu"));
     //System.out.println(Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN"));
 
-    //String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("LAURIE LAntAR LASSI SURINEN");
-    String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("AndUNE PELLA");
-    Scanner scanner = new Scanner(phraseTengwar);
+    String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("iii");
+    System.out.println(phraseTengwar);
+    //String phraseTengwar = Tengwars.quenyaVersTengwarLaTeX("AndUNE PELLA");
+    //Tengwars.quenyaVersTengwarLaTeX( "iii" );
+    //Scanner scanner = new Scanner(phraseTengwar);
 
-    while (scanner.hasNext()){
-        System.out.println(scanner.next());
-    }
+    //while (scanner.hasNext()){
+    //    System.out.println(scanner.next());
+    //}
 
-    scanner.close();
+    //scanner.close();
     //System.out.println(Tengwars.quenyaVersTengwarLaTeX("AndUNE PELLA"));
 
     //System.out.println(test.parcourirStringToTranslate(test.separateUpperCase("AndUNE")));
